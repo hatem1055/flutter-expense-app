@@ -7,9 +7,9 @@ class TransactionList extends StatelessWidget {
 
   final List<Transaction> transactions;
   TransactionList(this.transactions);
-
   @override
   Widget build(BuildContext context) {
+  final primaryColor = Theme.of(context).primaryColor;
   //converting the list of transactions into a list of widgets
   Widget createTransactionWidget(Transaction tx){
     return Card(
@@ -19,11 +19,11 @@ class TransactionList extends StatelessWidget {
             margin: EdgeInsets.symmetric(horizontal: 15,vertical:10),
             padding:EdgeInsets.all(10),
             decoration:BoxDecoration(
-              border:Border.all(color:Colors.purple , width:2 , style:BorderStyle.solid),
-              color:Colors.purple
+              border:Border.all(color:primaryColor, width:2 , style:BorderStyle.solid),
+              color:primaryColor
             ),
             child: Text(
-              '\$${tx.amount}',
+              '\$${tx.amount.toStringAsFixed(2)}',
               style:TextStyle(
                 fontWeight:FontWeight.bold,
                 fontSize:20,

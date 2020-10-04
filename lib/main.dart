@@ -1,39 +1,90 @@
 
 import 'package:flutter/material.dart';
 
-import 'widgets/user_transactions.dart';
+import 'widgets/transaction_list.dart';
+import 'widgets/add_tx_form.dart';
+import 'models/transaction.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter App',
+      title: 'Personal Expenses',
       home: MyHomePage(),
+      theme:ThemeData(
+        primarySwatch:Colors.purple,
+      ),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final List<Transaction> transactions = [
+    Transaction(title:'Math Membrship',id:'t1',amount:560,date:DateTime.now()),
+    Transaction(title:'English Membrship',id:'t2',amount:400,date:DateTime.now())
+  ];
+
+  void _addTx(String title,double amount){
+  final newTx = Transaction(title:title,amount:amount,date:DateTime.now(),id:DateTime.now().toString());
+    setState(() {
+      transactions.add(newTx);
+    });
+  }
+
+  void startAddNewTransaction(ctx){
+    showModalBottomSheet(context:ctx, builder:(_){
+      return  AddTxForm(_addTx);
+    }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Flutter App'),
-        backgroundColor:Colors.purple,
+    appBar: AppBar(
+        title: Text('Personal Expenses'),
+        backgroundColor:primaryColor,
+        actions: [
+          IconButton(
+            icon:Icon(Icons.add),
+            onPressed:(){startAddNewTransaction(context);},
+          )
+        ],
       ),
-      body:Column(
-        children:[
-        //chart
-        Container(
+      //floating action button
+      floatingActionButtonLocation:FloatingActionButtonLocation.centerFloat,
+      floatingActionButton:Container(
+        decoration:BoxDecoration(
+          borderRadius:BorderRadius.circular(500),
+          color:Theme.of(context).primaryColor
+        ),
+        child: IconButton(
+          icon:Icon(Icons.add),
+          color:Colors.white,
+          onPressed: (){startAddNewTransaction(context);},
+        ),
+      ),
+      //Body
+      body:SingleChildScrollView(
+        child:Column(children:[
+          Container(
           width: double.infinity,
           child: Card(
-              color: Colors.purple,
+              color:primaryColor,
               child: Text('CHART!!'),
           ),
         ),
-        UserTranactions()
-      ],)
+        TransactionList(transactions)
+      ],
+      )
+      ),
     );
   }
 }

@@ -1,11 +1,29 @@
 import 'package:flutter/material.dart';
 
-class AddTxForm extends StatelessWidget {
-  final titleInput = TextEditingController();
-  final amountInput = TextEditingController();
-
+class AddTxForm extends StatefulWidget {
   final Function addTx;
   AddTxForm(this.addTx);
+
+  @override
+  _AddTxFormState createState() => _AddTxFormState();
+}
+
+class _AddTxFormState extends State<AddTxForm> {
+  final titleInput = TextEditingController();
+
+  final amountInput = TextEditingController();
+
+  submitForm(){
+      print('object');
+      final enteredTitle = titleInput.text;
+      final enteredAmount = double.parse(amountInput.text);
+      if(enteredAmount <= 0 || enteredTitle.isEmpty){
+        return;
+      }
+      widget.addTx(enteredTitle,enteredAmount);
+      Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -18,19 +36,18 @@ class AddTxForm extends StatelessWidget {
               TextField(
                 decoration:InputDecoration(labelText:'Title'),
                 controller:titleInput,
+                onSubmitted:(_) => submitForm(),
               ),
               TextField(       
                 decoration:InputDecoration(labelText:'Amount'),
                 keyboardType:TextInputType.number,
                 controller:amountInput,
+                onSubmitted:(_) => submitForm(),
                 ),
                 FlatButton(
                   child: Text('Add Transaction'),
-                  textColor:Colors.purple,
-                  onPressed:(){
-                    var amount = double.parse(amountInput.text);
-                    addTx(titleInput.text,amount);
-                  },
+                  textColor:Theme.of(context).primaryColor,
+                  onPressed:() => submitForm(),
                 )
             ]
             ),
