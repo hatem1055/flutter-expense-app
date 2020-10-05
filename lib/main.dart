@@ -14,6 +14,23 @@ class MyApp extends StatelessWidget {
       home: MyHomePage(),
       theme:ThemeData(
         primarySwatch:Colors.purple,
+        fontFamily:'Quicksand',
+        textTheme:ThemeData.light().textTheme.copyWith(
+          headline6:TextStyle(
+              fontFamily:'OpenSans',
+              fontSize:18,
+              fontWeight:FontWeight.bold
+          )
+        ),
+        appBarTheme:AppBarTheme(
+          textTheme:ThemeData.light().textTheme.copyWith(
+            headline6:TextStyle(
+              fontFamily:'OpenSans',
+              fontSize:20,
+              fontWeight:FontWeight.bold
+            )
+          )
+        )
       ),
     );
   }
@@ -26,8 +43,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> transactions = [
-    Transaction(title:'Math Membrship',id:'t1',amount:560,date:DateTime.now()),
-    Transaction(title:'English Membrship',id:'t2',amount:400,date:DateTime.now())
+    // Transaction(title:'Math Membrship',id:'t1',amount:560,date:DateTime.now()),
+    // Transaction(title:'English Membrship',id:'t2',amount:400,date:DateTime.now())
   ];
 
   void _addTx(String title,double amount){

@@ -37,7 +37,7 @@ class TransactionList extends StatelessWidget {
             children: [
             Text(
               tx.title,
-              style:TextStyle(fontSize:16,fontWeight:FontWeight.bold),
+              style:Theme.of(context).textTheme.headline6,
             ),
             Text(
               DateFormat.yMMMd().format(tx.date),
@@ -52,7 +52,23 @@ class TransactionList extends StatelessWidget {
     
     return Container(
       height: 200,
-      child: ListView.builder(
+      child: transactions.isEmpty ? Column(
+        children: [
+          Text('no transactions added yet!',style:Theme.of(context).textTheme.headline6,),
+          SizedBox(
+            height:10,
+          ),
+          Container(
+            height:100,
+            child: Image.asset(
+              'lib/assets/images/waiting.png',
+              fit:BoxFit.cover,
+            
+            ),
+          )
+        ],
+      )
+      :ListView.builder(
         itemBuilder: (ctx, index) {
           return transactionWidgets[index];
         },
