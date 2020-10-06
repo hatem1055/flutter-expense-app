@@ -1,14 +1,19 @@
-
+//packeges
 import 'package:flutter/material.dart';
 
+//widgets
 import 'widgets/transaction_list.dart';
 import 'widgets/add_tx_form.dart';
+import 'widgets/chart.dart';
+//models
 import 'models/transaction.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
+  //Theming
   Widget build(BuildContext context) {
+    //Theming 
     return MaterialApp(
       title: 'Personal Expenses',
       home: MyHomePage(),
@@ -42,18 +47,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> transactions = [
-    // Transaction(title:'Math Membrship',id:'t1',amount:560,date:DateTime.now()),
-    // Transaction(title:'English Membrship',id:'t2',amount:400,date:DateTime.now())
-  ];
+  List<Transaction> transactions = [];
 
+  //adding transaction method
   void _addTx(String title,double amount){
   final newTx = Transaction(title:title,amount:amount,date:DateTime.now(),id:DateTime.now().toString());
     setState(() {
       transactions.add(newTx);
     });
   }
-
+  //trigring add transaction modal
   void startAddNewTransaction(ctx){
     showModalBottomSheet(context:ctx, builder:(_){
       return  AddTxForm(_addTx);
@@ -61,10 +64,19 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  //get transactions for the last week only
+  List<Transaction> get transactionsLastWeek{
+      final lastWeek = DateTime.now().subtract(Duration(days:7));
+      return transactions.where((tx){
+        return tx.date.isAfter(lastWeek);
+      }).toList();
+  }
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
+
+    //app bar
     appBar: AppBar(
         title: Text('Personal Expenses'),
         backgroundColor:primaryColor,
@@ -75,6 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
+
       //floating action button
       floatingActionButtonLocation:FloatingActionButtonLocation.centerFloat,
       floatingActionButton:Container(
@@ -88,16 +101,11 @@ class _MyHomePageState extends State<MyHomePage> {
           onPressed: (){startAddNewTransaction(context);},
         ),
       ),
+
       //Body
       body:SingleChildScrollView(
         child:Column(children:[
-          Container(
-          width: double.infinity,
-          child: Card(
-              color:primaryColor,
-              child: Text('CHART!!'),
-          ),
-        ),
+        Chart(transactionsLastWeek),
         TransactionList(transactions)
       ],
       )
