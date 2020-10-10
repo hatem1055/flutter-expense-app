@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 
 
 import '../models/transaction.dart';
+import 'chart_bar.dart';
 class Chart extends StatelessWidget {
 
   final List<Transaction> transactions;
@@ -27,8 +28,14 @@ class Chart extends StatelessWidget {
 
       }
 
-      return {'day':dayFormated,'amount':totalAmount};
+      return {'day':dayFormated[0],'amount':totalAmount};
     });
+  }
+
+  double get totalMountsThisWeek{
+    return groupedTransactionsValue.fold(0, (previousValue, element){
+      return previousValue + element['amount'];
+    }); 
   }
 
   @override
@@ -36,7 +43,22 @@ class Chart extends StatelessWidget {
     return Card(
       elevation: 6,
       margin:EdgeInsets.all(20),
-      child:Row(),
+      child:Padding(
+        padding: EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment:MainAxisAlignment.spaceAround,
+          children:[...groupedTransactionsValue.map((data){
+            final perc = totalMountsThisWeek != 0 ? data['amount'] / totalMountsThisWeek : 0.0; 
+            return Flexible(
+              fit: FlexFit.tight,
+              child:Container(
+                margin:EdgeInsets.all(2.5),
+                child: ChartBar(data['day'],data['amount'],perc)
+              ) ,
+            );
+          }).toList()],
+        ),
+      ),
     );
   }
 }

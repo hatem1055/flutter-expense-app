@@ -6,52 +6,58 @@ import '../models/transaction.dart';
 class TransactionList extends StatelessWidget {
 
   final List<Transaction> transactions;
-  TransactionList(this.transactions);
+  final Function delTx;
+  TransactionList(this.transactions,this.delTx);
+
   @override
   Widget build(BuildContext context) {
   final primaryColor = Theme.of(context).primaryColor;
   //converting the list of transactions into a list of widgets
   Widget createTransactionWidget(Transaction tx){
     return Card(
-      child:Row(
-        children: [
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 15,vertical:10),
-            padding:EdgeInsets.all(10),
-            decoration:BoxDecoration(
-              border:Border.all(color:primaryColor, width:2 , style:BorderStyle.solid),
-              color:primaryColor
-            ),
-            child: Text(
-              '\$${tx.amount.toStringAsFixed(2)}',
-              style:TextStyle(
-                fontWeight:FontWeight.bold,
-                fontSize:20,
-                color:Colors.white
+        elevation: 5,
+        margin: EdgeInsets.symmetric(
+          vertical: 8,
+          horizontal: 5
+        ),
+        child: ListTile(
+        leading:CircleAvatar(
+          radius: 30,
+          backgroundColor:primaryColor,
+          child:Padding(
+              padding:EdgeInsets.all(6),
+              child: FittedBox(
+              child: Text(
+                '\$${tx.amount}',
+                style:TextStyle(
+                  fontWeight:FontWeight.bold,
                 ),
-              ),
-          ),
-          //Title & Date
-          Column(
-            crossAxisAlignment:CrossAxisAlignment.start,
-            children: [
-            Text(
-              tx.title,
-              style:Theme.of(context).textTheme.headline6,
+              )
             ),
-            Text(
-              DateFormat.yMMMd().format(tx.date),
-              style:TextStyle(color:Colors.grey[600]),
-            )
-          ],)
-      ],),
-      );
-    }  
+          ),
+        ),
+        title:Text(
+          tx.title,
+          style:Theme.of(context).textTheme.headline6
+        ),
+        subtitle: Text(
+          DateFormat.yMMMd().format(tx.date)
+        ),
+        trailing:IconButton(
+          icon:Icon(Icons.delete),
+          color: Theme.of(context).errorColor,
+          onPressed: (){
+            delTx(tx.id);
+          },
+        ),
+      ),
+    );
+  }  
     final List<Widget> transactionWidgets = transactions.map(createTransactionWidget).toList();
     // adding transaction
     
     return Container(
-      height: 200,
+      height: 400,
       child: transactions.isEmpty ? Column(
         children: [
           Text('no transactions added yet!',style:Theme.of(context).textTheme.headline6,),

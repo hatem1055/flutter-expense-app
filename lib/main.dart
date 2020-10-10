@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
               fontFamily:'OpenSans',
               fontSize:18,
               fontWeight:FontWeight.bold
-          )
+          ),
         ),
         appBarTheme:AppBarTheme(
           textTheme:ThemeData.light().textTheme.copyWith(
@@ -33,7 +33,10 @@ class MyApp extends StatelessWidget {
               fontFamily:'OpenSans',
               fontSize:20,
               fontWeight:FontWeight.bold
-            )
+            ),
+            button:TextStyle(
+              color:Colors.white,
+            ) ,
           )
         )
       ),
@@ -49,19 +52,29 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Transaction> transactions = [];
 
+
   //adding transaction method
-  void _addTx(String title,double amount){
-  final newTx = Transaction(title:title,amount:amount,date:DateTime.now(),id:DateTime.now().toString());
+  void _addTx(String title,double amount,DateTime date){
+  final newTx = Transaction(title:title,amount:amount,date:date,id:DateTime.now().toString());
     setState(() {
       transactions.add(newTx);
     });
   }
+
   //trigring add transaction modal
   void startAddNewTransaction(ctx){
     showModalBottomSheet(context:ctx, builder:(_){
       return  AddTxForm(_addTx);
     }
     );
+  }
+
+  //deleting transaction 
+  void deleteTx(id){
+    print(transactions[0].id);
+    setState((){
+      transactions.removeWhere((element)=>element.id == id);
+    });
   }
 
   //get transactions for the last week only
@@ -71,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
         return tx.date.isAfter(lastWeek);
       }).toList();
   }
+
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
@@ -106,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body:SingleChildScrollView(
         child:Column(children:[
         Chart(transactionsLastWeek),
-        TransactionList(transactions)
+        TransactionList(transactions,deleteTx)
       ],
       )
       ),
